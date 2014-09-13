@@ -1,0 +1,68 @@
+﻿package jsh.exam.spinner;
+
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+//스피너의 선택 이벤트를 위해서 OnItemSelectedListener 인터페이스 상속
+public class main extends Activity implements OnItemSelectedListener{
+    /** Called when the activity is first created. */
+	
+	//스피너 클릭 시 보여질 문자 배열 할당
+	private String[] aa = {"사과","바나나","키위","파인애플","딸기"}; 
+			
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+        
+        //xml에 선언한 스피너를 id값으로 불러옴
+        Spinner sp1 = (Spinner) findViewById (R.id.spinner1);
+        
+        //스피너를 선택 시 보여질 팝업의 제목을 지정
+        sp1.setPrompt("좋아하는 과일을 선택");
+        
+        
+        //문자열 어댑터 선언
+        ArrayAdapter<String> list;
+        
+        //어댑터 객체를 생성하고 보여질 아이템 리소스와 문자열 지정
+        list = new ArrayAdapter(this, android.R.layout.simple_spinner_item, aa);
+        
+        
+        //스피너에 adapter 연결
+        sp1.setAdapter(list);
+        
+        //스피너가 선택 됫을 때 이벤트 처리
+        sp1.setOnItemSelectedListener(this);
+        
+    }
+
+	@Override
+	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		// TODO Auto-generated method stub
+		
+		//스피너에 보여지고 있는 값 
+		TextView tv = (TextView)arg1;
+		
+		//선택 된 값과 id값을 보기위한 텍스트뷰선언
+		TextView bb = (TextView) findViewById (R.id.textView1);
+		
+		//선택된 값 보기
+		bb.setText("해당 문자열 : " + tv.getText() + "\n해당 id값 : " + arg2 );
+		
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+}
