@@ -1,0 +1,5 @@
+package jp.nyatla.nyartoolkit.and;
+
+public interface IGLPlane {
+	public void registerComponent(InfoCircle circle);
+}
