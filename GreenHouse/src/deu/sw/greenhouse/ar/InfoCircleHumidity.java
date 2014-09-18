@@ -1,14 +1,7 @@
 package deu.sw.greenhouse.ar;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jp.androidgroup.nyartoolkit.utils.gl.AndGLView;
-import jp.nyatla.nyartoolkit.and.R;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.view.SurfaceView;
-import android.view.View;
+import deu.sw.greenhouse.R;
 
 public class InfoCircleHumidity extends InfoCircle{
 	

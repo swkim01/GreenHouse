@@ -1,7 +1,7 @@
 package deu.sw.greenhouse.ar;
 
 import jp.androidgroup.nyartoolkit.utils.gl.AndGLView;
-import jp.nyatla.nyartoolkit.and.R;
+import deu.sw.greenhouse.R;
 
 public class InfoCircleIlluminance extends InfoCircle{
 	

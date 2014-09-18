@@ -2,7 +2,6 @@ package deu.sw.greenhouse.mqtt;
 
 import java.io.IOException;
 
-import jp.nyatla.nyartoolkit.and.R;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -17,7 +16,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 
 import com.ibm.mqtt.IMqttClient;
@@ -27,6 +25,7 @@ import com.ibm.mqtt.MqttPersistence;
 import com.ibm.mqtt.MqttPersistenceException;
 import com.ibm.mqtt.MqttSimpleCallback;
 
+import deu.sw.greenhouse.R;
 import deu.sw.greenhouse.activity.ARPreviewActivity;
 
 /* 

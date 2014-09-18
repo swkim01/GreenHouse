@@ -4,10 +4,6 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
-
-
-
-
 //import jp.androidgroup.nyartoolkit.R;
 import jp.androidgroup.nyartoolkit.markersystem.NyARAndMarkerSystem;
 import jp.androidgroup.nyartoolkit.markersystem.NyARAndSensor;
@@ -15,7 +11,7 @@ import jp.androidgroup.nyartoolkit.sketch.AndSketch;
 import jp.androidgroup.nyartoolkit.utils.camera.CameraPreview;
 import jp.androidgroup.nyartoolkit.utils.gl.AndGLDebugDump;
 import jp.androidgroup.nyartoolkit.utils.gl.AndGLView;
-import jp.nyatla.nyartoolkit.and.R;
+//import jp.nyatla.nyartoolkit.and.R;
 import jp.nyatla.nyartoolkit.core.types.NyARDoublePoint3d;
 import jp.nyatla.nyartoolkit.core.types.matrix.NyARDoubleMatrix44;
 import jp.nyatla.nyartoolkit.markersystem.NyARMarkerSystemConfig;
@@ -33,6 +29,7 @@ import android.provider.Settings.Secure;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
+import deu.sw.greenhouse.R;
 import deu.sw.greenhouse.ar.IGLPlane;
 import deu.sw.greenhouse.ar.InfoCircle;
 import deu.sw.greenhouse.ar.InfoCircleHumidity;
