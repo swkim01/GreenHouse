@@ -3,12 +3,6 @@ package deu.sw.greenhouse.ar;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.handstudio.android.hzgrapherlib.animation.GraphAnimation;
-import com.handstudio.android.hzgrapherlib.graphview.CurveGraphView;
-import com.handstudio.android.hzgrapherlib.vo.GraphNameBox;
-import com.handstudio.android.hzgrapherlib.vo.curvegraph.CurveGraph;
-import com.handstudio.android.hzgrapherlib.vo.curvegraph.CurveGraphVO;
-
 import jp.androidgroup.nyartoolkit.utils.gl.AndGLView;
 import jp.nyatla.nyartoolkit.and.R;
 import android.graphics.Bitmap;
