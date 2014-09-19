@@ -109,6 +109,8 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
   	  	
   	  	SharedPreferences p = getSharedPreferences(PushService.TAG, MODE_PRIVATE);
   	  	boolean started = p.getBoolean(PushService.PREF_STARTED, false);
+  	  	
+
     }
 	
 	
@@ -155,13 +157,13 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 		
 		FrameLayout fr=((FrameLayout)this.findViewById(R.id.sketchLayout));
 		
-		///////////////////////////////mqtt////////////////
-		//액티비티가 시작되면
-		StartPushService();//서비스를 시작하고
-		Intent intent = new Intent(this, PushService.class); //시작한 서비스에 연결한다.
-		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
-		///////////////////////////////////////////////////////
+//		///////////////////////////////mqtt////////////////
+//		//액티비티가 시작되면
+//		StartPushService();//서비스를 시작하고
+//		Intent intent = new Intent(this, PushService.class); //시작한 서비스에 연결한다.
+//		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//
+//		///////////////////////////////////////////////////////
 		
 		
 		/////////////////////////////////test////////////////////////////////
@@ -193,6 +195,8 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 		fr.addView(this._glv, 0,new LayoutParams(screen_w,screen_h));
 		
 		
+		
+
 
 		
 		
@@ -211,9 +215,21 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 	
 	
 	
+	public void bindservice()
+	{
+		///////////////////////////////mqtt////////////////
+		//액티비티가 시작되면
+		StartPushService();//서비스를 시작하고
+		Intent intent = new Intent(this, PushService.class); //시작한 서비스에 연결한다.
+		this.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+		///////////////////////////////////////////////////////
+	}
+	
 	
 	public void setupGL(GL10 gl)
 	{
+		bindservice();
 		try {
 			AssetManager assetMng = getResources().getAssets();
 			//create sensor controller.

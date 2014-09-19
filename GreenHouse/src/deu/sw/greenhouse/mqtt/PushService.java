@@ -105,7 +105,7 @@ public class PushService extends Service
 	private static final String		ACTION_RECONNECT = MQTT_CLIENT_ID + ".RECONNECT";
 	
 	// Connection log for the push service. Good for debugging.
-	private ConnectionLog 			mLog;
+	//private ConnectionLog 			mLog;
 	
 	// Connectivity manager to determining, when the phone loses connection
 	private ConnectivityManager		mConnMan;
@@ -169,12 +169,12 @@ public class PushService extends Service
 		log("Creating service");
 		mStartTime = System.currentTimeMillis();
 
-		try {
-			mLog = new ConnectionLog();
-			Log.i(TAG, "Opened log at " + mLog.getPath());
-		} catch (IOException e) {
-			Log.e(TAG, "Failed to open log", e);
-		}
+//		try {
+//			mLog = new ConnectionLog();
+//			Log.i(TAG, "Opened log at " + mLog.getPath());
+//		} catch (IOException e) {
+//			Log.e(TAG, "Failed to open log", e);
+//		}
 
 		// Get instances of preferences, connectivity manager and notification manager
 		mPrefs = getSharedPreferences(TAG, MODE_PRIVATE);
@@ -209,10 +209,10 @@ public class PushService extends Service
 			stop();
 		}
 		
-		try {
-			if (mLog != null)
-				mLog.close();
-		} catch (IOException e) {}		
+//		try {
+//			if (mLog != null)
+//				mLog.close();
+//		} catch (IOException e) {}		
 	}
 	
 	@Override
@@ -249,12 +249,12 @@ public class PushService extends Service
 			Log.i(TAG, message);			
 		}
 		
-		if (mLog != null)
-		{
-			try {
-				mLog.println(message);
-			} catch (IOException ex) {}
-		}		
+//		if (mLog != null)
+//		{
+//			try {
+//				mLog.println(message);
+//			} catch (IOException ex) {}
+//		}		
 	}
 	
 	// Reads whether or not the service has been started from the preferences
