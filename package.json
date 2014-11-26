@@ -1,0 +1,22 @@
+{
+  "name": "greenhouse",
+  "version": "0.0.1",
+  "description": "test greenhouse project",
+  "main": "app.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wneen/hoyong.git"
+  },
+  "keywords": [
+    "greenhouse"
+  ],
+  "author": "hoyong",
+  "homepage": "https://github.com/wneen/hoyong",
+  "dependencies": {
+    "async": "^0.9.0",
+    "mongoose": "^3.8.17",
+    "mosca": "^0.24.2",
+    "mqtt": "^0.3.12"
+  }
+}
