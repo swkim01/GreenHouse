@@ -276,7 +276,6 @@ public class GraphSquare implements AndGLView.IGLViewEventListener
 	public void onGlMayBeStop() {
 		this.gl.glDeleteTextures(1, textureIDs, 0);
 		this.bitmapBack = null;
-		this.bitmapBack.recycle();
 		this.gl=null;
 	}
 	

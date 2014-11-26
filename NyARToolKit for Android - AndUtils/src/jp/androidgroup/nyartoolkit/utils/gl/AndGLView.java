@@ -109,6 +109,7 @@ class GLRenderer implements GLSurfaceView.Renderer
 		}
 		gl.glViewport(0, 0, width, height);
 	}
+	
 	@Override
 	public void onDrawFrame(GL10 gl)
 	{

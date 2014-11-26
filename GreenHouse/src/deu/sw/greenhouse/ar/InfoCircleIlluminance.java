@@ -1,11 +1,7 @@
 package deu.sw.greenhouse.ar;
 
-import java.util.ArrayList;
-
 import jp.androidgroup.nyartoolkit.utils.gl.AndGLView;
-import android.graphics.Color;
 import deu.sw.greenhouse.R;
-import deu.sw.greenhouse.graph.TimeValue;
 
 public class InfoCircleIlluminance extends Circle{
 	
@@ -14,7 +10,7 @@ public class InfoCircleIlluminance extends Circle{
 			float i_size_x, float i_size_y, float i_size_z, int textSize) {
 		super(i_context, plane, i_size_x, i_size_y, i_size_z, textSize);
 		infoText = "";
-		setBitmap(R.drawable.roughnessoff, R.drawable.roughnesson);
+		setBitmap(R.drawable.illuminanceoff, R.drawable.illuminanceon);
 		setTag("info");
 		setSubTag("Illuminance");
 	}

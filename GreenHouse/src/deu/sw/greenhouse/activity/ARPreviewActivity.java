@@ -5,24 +5,16 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
-
-
-
-
-
-
-
-//import jp.androidgroup.nyartoolkit.R;
 import jp.androidgroup.nyartoolkit.markersystem.NyARAndMarkerSystem;
 import jp.androidgroup.nyartoolkit.markersystem.NyARAndSensor;
 import jp.androidgroup.nyartoolkit.sketch.AndSketch;
 import jp.androidgroup.nyartoolkit.utils.camera.CameraPreview;
-import jp.androidgroup.nyartoolkit.utils.gl.AndGLDebugDump;
 import jp.androidgroup.nyartoolkit.utils.gl.AndGLView;
-//import jp.nyatla.nyartoolkit.and.R;
+import jp.nyatla.nyartoolkit.core.NyARException;
 import jp.nyatla.nyartoolkit.core.types.NyARDoublePoint3d;
 import jp.nyatla.nyartoolkit.core.types.matrix.NyARDoubleMatrix44;
 import jp.nyatla.nyartoolkit.markersystem.NyARMarkerSystemConfig;
+import android.R.integer;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -34,22 +26,24 @@ import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.provider.Settings.Secure;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.ViewDebug.FlagToString;
+import android.view.SubMenu;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import deu.sw.greenhouse.R;
+import deu.sw.greenhouse.ar.AirFanButton;
 import deu.sw.greenhouse.ar.Circle;
 import deu.sw.greenhouse.ar.GraphSquare;
 import deu.sw.greenhouse.ar.IGLPlane;
 import deu.sw.greenhouse.ar.InfoCircleHumidity;
 import deu.sw.greenhouse.ar.InfoCircleIlluminance;
+import deu.sw.greenhouse.ar.InfoCircleSoilHumidity;
 import deu.sw.greenhouse.ar.InfoCircleTemperature;
 import deu.sw.greenhouse.ar.LEDButton;
 import deu.sw.greenhouse.graph.TimeValue;
@@ -87,7 +81,7 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 	public ArrayList<TimeValue> timeValueTemperature = new ArrayList<TimeValue>();
 	
 	private String mDeviceID;
-
+	
 	@Override
 	public void onDestroy()
 	{
@@ -101,7 +95,7 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
     	Editor editor = getSharedPreferences(PushService.TAG, MODE_PRIVATE).edit();
     	editor.putString(PushService.PREF_DEVICE_ID, mDeviceID);
     	editor.commit();
-
+    	//this._glv=new AndGLView(this);
 	}
 	
     @Override
@@ -115,6 +109,24 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 		
   	  	SharedPreferences p = getSharedPreferences(PushService.TAG, MODE_PRIVATE);
   	  	boolean started = p.getBoolean(PushService.PREF_STARTED, false);
+    	
+  	  	
+  	  	
+  	  	
+//		
+//		screen_w=this.getWindowManager().getDefaultDisplay().getWidth();
+//		screen_h=this.getWindowManager().getDefaultDisplay().getHeight();
+//		
+//		FrameLayout fr=((FrameLayout)this.findViewById(R.id.sketchLayout));
+//
+//		this._camera_preview=new CameraPreview(this);
+//		this._cap_size=this._camera_preview.getRecommendPreviewSize((int)((screen_w/2)*0.9),(int)((screen_h/2)*0.9));
+//		
+//		//camera
+//		fr.addView(this._camera_preview, 0, new LayoutParams(screen_w,screen_h));
+//		//GLview
+//		this._glv=new AndGLView(this);
+//		fr.addView(this._glv, 0,new LayoutParams(screen_w,screen_h));
     }
     
     public void setGraphValue(ArrayList<TimeValue> timevalue, String graphId)
@@ -143,6 +155,7 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 			LocalBinder binder = (LocalBinder) service;
 			mService = binder.getService();
 			mService.registerCallback(mCallback);
+			//mService.truebound();
 			mBound = true;
 			setupCreateGraph();
 		}
@@ -159,8 +172,21 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 			public void sendData(ArrayList<TimeValue> timevalue, String graphId) {
 				setGraphValue(timevalue, graphId);
 			}
+			
+//			@Override
+//			public void boundToTrue() {
+//				setbound(true);
+//			}
+			
+			
 		};
     };
+    
+//    public void setbound(Boolean t)
+//    {
+//    	this.mBound = t;
+//		Log.i("ssss", "mBound = true");
+//    }
     
     @Override
     public void onStop()
@@ -173,8 +199,8 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
     		mBound = false;
     	}
     	StopPushService();
+    	this._glv=null;
     }
-    
 
 	@Override
 	public void onStart()
@@ -194,6 +220,8 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 		//GLview
 		this._glv=new AndGLView(this);
 		fr.addView(this._glv, 0,new LayoutParams(screen_w,screen_h));
+		//_glv.bringToFront();//갤럭시 s2에서 이걸쓰면 시작시 도형이 나오고 그래프후 안나옴
+							// 안쓰면 시작시 도형이 안나오고 그래프후 도형이 나옴
 	}
 
 	NyARAndSensor _ss;
@@ -206,7 +234,10 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 	InfoCircleHumidity humidity;
 	InfoCircleIlluminance illuminance;
 	InfoCircleTemperature temperature;
+	InfoCircleSoilHumidity soilhumidity;
+	
 	LEDButton ledButton;
+	AirFanButton airFanButton;
 	GraphSquare humidityGraph;
 	GraphSquare illuminanceGraph;
 	GraphSquare temperatureGraph;
@@ -245,7 +276,9 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 			this.humidity = new InfoCircleHumidity(this._glv, this, 128, 128, 0, 20);		
 			this.illuminance = new InfoCircleIlluminance(this._glv, this, 128, 128, 0, 20);
 			this.temperature = new InfoCircleTemperature(this._glv, this, 128, 128, 0, 20);
+			this.soilhumidity = new InfoCircleSoilHumidity(this._glv, this, 128, 128, 0, 20);
 			this.ledButton = new LEDButton(this._glv, this, 64+50, 64+50, 0, 0);
+			this.airFanButton = new AirFanButton(this._glv, this, 64+50, 64+50, 0, 0);
 			this.humidityGraph = new GraphSquare(this._glv, this, "%", 256+128+32, 256, 0);
 			this.humidityGraph.setTag(HUMIDITY);
 			this.illuminanceGraph = new GraphSquare(this._glv, this, "L%", 256+128+32, 256, 0);
@@ -294,6 +327,7 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 					gl.glLoadMatrixf(this._ms.getGlMarkerMatrix(this._mid),0);
 					
 					gl.glMultMatrixf(coord, 0);
+					
 
 					this.temperature.draw(0, 270-50, 0);
 					this.temperature.setText(getSensorValueToString_Temp());
@@ -301,7 +335,11 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 					this.humidity.setText(getSensorValueToString_Humi());
 					this.illuminance.draw(70, 150-50, 0);
 					this.illuminance.setText(getSensorValueToString_Illu());
-					this.ledButton.draw(250, -50, 00);
+					this.soilhumidity.draw(170, 250, 0);
+					this.soilhumidity.setText(getSensorValueToString_Soil());
+					this.ledButton.draw(250, -50, 0);
+					this.airFanButton.draw(250, 100, 0);
+
 					
 					if(humidity.getButtonState())
 					{
@@ -335,6 +373,9 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 									if(infoCircle.getTag().equals("led") && mBound)
 									{
 											mService.setLED(false);
+									}else if(infoCircle.getTag().equals("airfan") && mBound)
+									{
+											mService.setAirFan(false);
 									}
 								}
 								else if(state == false && infoCircle.getTag().equals("info"))
@@ -354,9 +395,14 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 								else
 								{
 									infoCircle.setButtonState(true);
-									if(mBound)
+									if(infoCircle.getTag().equals("led") && mBound)
 									{
 										mService.setLED(true);
+									}
+									
+									if(infoCircle.getTag().equals("airfan") && mBound)
+									{
+										mService.setAirFan(true);
 									}
 								}
 							}
@@ -372,15 +418,13 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 								// TODO Auto-generated method stub
 								if(graph.getState())
 								{ 			
-											Log.i("test", "그래프 이밴트 발생");
-											startDetailGraphActivity(graph.getTag());
+									Log.i("test", "그래프 이밴트 발생");
+									startDetailGraphActivity(graph.getTag());
 								}
 								
 							}
 						});
-					}
-
-					
+					}	
 				}
 			}
 		}
@@ -438,16 +482,16 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 		intent.putExtra("color", color);
 		intent.putExtra("value_Y", value_Y);
 		intent.putExtra("value_Max", value_Max);
-		//intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		startActivity(intent);
-		//finish();
+		finish();
 	}
 	
 //	@Override
 //	public boolean dispatchKeyEvent(KeyEvent event){
 //		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) { // 백 버튼
 //	 		Intent intent = new Intent(this, GreenHouseMainActivity.class);
-//	 		intent.setFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+//	 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //			startActivity(intent);
 //			//finish();
 //		}   
@@ -556,6 +600,36 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 		PushService.actionStop(getApplicationContext());
 	}
 	
+	public String getSensorValueToString_Soil()
+	{
+//		String sensorValue = "";
+//		String returnvalue = "";
+		String sensorValue = null;
+		String returnValue = null;
+		int val;
+		if(mBound)
+		{
+			sensorValue = mService.getSensorValueToString_Soil();
+		}
+		
+		val = Integer.parseInt(sensorValue);
+		
+		if(val > 300)
+		{
+			returnValue = "충분";
+		}
+		else if(val <= 300)
+		{
+			returnValue = "부족";
+		}
+		else if(returnValue == null)
+		{
+			returnValue = "";
+		}
+		
+		return returnValue;
+	}
+	
 	public String getSensorValueToString_Illu()
 	{
 		String sensorValue = null;
@@ -636,6 +710,64 @@ public class ARPreviewActivity extends AndSketch implements AndGLView.IGLFunctio
 		requestGraphData(illuminance.getSubTag());
 		requestGraphData(temperature.getSubTag());
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		// XML로 옵션메뉴 추가 하기
+//		getMenuInflater().inflate(R.menu.activity_main, menu);
 
+//		// Java Code로 옵션메뉴 추가 하기
+//		menu.add(0, ONE, Menu.NONE, "ONE").setIcon(android.R.drawable.ic_menu_rotate);
+//		menu.add(0, TWO, Menu.NONE, "TWO").setIcon(android.R.drawable.ic_menu_add);
+//		menu.add(0, THREE, Menu.NONE, "THREE").setIcon(android.R.drawable.ic_menu_agenda);
+//		menu.add(0, FOUR, Menu.NONE, "FOUR");
+//		menu.add(0, FIVE, Menu.NONE, "FIVE");
+		
+		// Menu에 SubMenu 추가
+			SubMenu subMenu = menu.addSubMenu("LED 밝기설정");
+
+			subMenu.add(1, 1, Menu.NONE, "LED 밝기 1단계");
+			subMenu.add(1, 2, Menu.NONE, "LED 밝기 2단계");
+			subMenu.add(1, 3, Menu.NONE, "LED 밝기 3단계");
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case 1:
+			Toast.makeText(this, "LED 밝기 1단계", Toast.LENGTH_SHORT).show();
+			if(	ledButton.getButtonState())
+			{
+				//mService.setLED(true);
+				mService.setLEDPower(1);
+			}
+			break;
+
+		case 2:
+			Toast.makeText(this, "LED 밝기 2단계", Toast.LENGTH_SHORT).show();
+			if(ledButton.getButtonState())
+			{
+				//mService.setLED(true);
+				mService.setLEDPower(4);
+			}
+			break;
+
+		case 3:
+			Toast.makeText(this, "LED 밝기 3단계", Toast.LENGTH_SHORT).show();
+			if(ledButton.getButtonState())
+			{
+				//mService.setLED(true);
+				mService.setLEDPower(9);
+			}
+			break;
+
+		default:
+			break;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
 
 }

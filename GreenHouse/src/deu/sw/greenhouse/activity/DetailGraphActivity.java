@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -54,18 +53,26 @@ public class DetailGraphActivity extends Activity {
 
 		
 	}
-//	
-//	@Override
-//	public boolean dispatchKeyEvent(KeyEvent event){
-//		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) { // 백 버튼
-//	 		Intent intent = new Intent(this, ARPreviewActivity.class);
-//	 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//			startActivity(intent);
-//			//finish();
-//		}   
-//		return true;
-//
-//	}
+	
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		bitmap.recycle();
+		bitmap=null;
+	}
+	
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event){
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) { // 백 버튼
+	 		Intent intent = new Intent(this, ARPreviewActivity.class);
+	 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			startActivity(intent);
+			finish();
+		}   
+		return true;
+
+	}
 	
 	protected void setupDefaultActivity() {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);

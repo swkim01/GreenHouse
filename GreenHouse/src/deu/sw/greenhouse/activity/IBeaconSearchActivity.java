@@ -9,12 +9,10 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.Toast;
 

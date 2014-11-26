@@ -46,6 +46,7 @@ public class PushService extends Service
 	
 	public interface ICallback {
 		public void sendData(ArrayList<TimeValue> timeVlaue, String graphId);
+//		public void boundToTrue();
 	}
 	
 	private ICallback mCallback;
@@ -73,6 +74,13 @@ public class PushService extends Service
 				mCallback.sendData(this.timeValueTemperature, "temp");
 		}
 	}
+	
+//	public void truebound()
+//	{
+//		if(mCallback != null)
+//			mCallback.boundToTrue();
+//		
+//	}
 			
 	//컴포넌트에 반환해줄 IBinder를 위한 클래스		
 	public class LocalBinder extends Binder{
@@ -92,6 +100,11 @@ public class PushService extends Service
 		return this.msg_illu;
 	}
 	
+	public String getSensorValueToString_Soil()
+	{
+		return this.msg_soil;
+	}
+	
 	public String getSensorValueToString_Humi()
 	{
 		return this.msg_humi;
@@ -107,12 +120,25 @@ public class PushService extends Service
 //		return this.timeValue;
 //	}
 //	
+	public void setLEDPower(int power)
+	{
+		mConnection.setLEDPower(power);
+	}
+	
 	public void setLED(Boolean bool)
 	{
 		Log.i("test", "LED값 = "+LED+"전");
 		this.LED = bool;
 		mConnection.setLED();//
 		Log.i("test", "LED값 = "+LED+"후");
+	}
+	
+	public void setAirFan(Boolean bool)
+	{
+		Log.i("test", "AirFan값 = "+AIRFAN+"전");
+		this.AIRFAN = bool;
+		mConnection.setAirFan();//
+		Log.i("test", "AirFan값 = "+AIRFAN+"후");
 	}
 	
 	public void requestHumidityGraphData()
@@ -135,7 +161,9 @@ public class PushService extends Service
 	private static String msg_illu = "";
 	private static String msg_humi = "";
 	private static String msg_temp = "";
+	private static String msg_soil = "";
 	private static Boolean LED;
+	private static Boolean AIRFAN;
 	
 	private static ArrayList<TimeValue> timeValueHumidity = new ArrayList<TimeValue>();
 	private static ArrayList<TimeValue> timeValueIlluminance = new ArrayList<TimeValue>();
@@ -567,6 +595,7 @@ public class PushService extends Service
 				subscribeToTopic("hoyong/sensor/illu");
 				subscribeToTopic("hoyong/sensor/humi");
 				subscribeToTopic("hoyong/sensor/temp");
+				subscribeToTopic("hoyong/sensor/soil");
 				subscribeToTopic("greenhouse/sensor/R1/humi");
 				subscribeToTopic("greenhouse/sensor/R1/temp");
 				subscribeToTopic("greenhouse/sensor/R1/illu");
@@ -663,11 +692,12 @@ public class PushService extends Service
 			else if(topicName.equals("greenhouse/sensor/R1/temp")){
 				jsonSub(s, "temp");
 			}
+			else
+			{
+				
+			}
 			
-			
-			
-			
-			
+
 					
 			MessageToString(topicName, message);
 		} 
@@ -744,6 +774,11 @@ public class PushService extends Service
 				msg_temp = new String(message+"℃");
 				log("message_hoyong/sensor/temp: " + msg_temp);
 			}
+			else if(topicName.equals("hoyong/sensor/soil"))
+			{
+				msg_soil = new String(message);
+				log("message_hoyong/sensor/soil: " + msg_soil);
+			}
 		}
 		
 		public void sendKeepAlive() throws MqttException {
@@ -759,7 +794,7 @@ public class PushService extends Service
 			if(LED == true)
 			{
 				try {
-					publishToTopic("greenhouse/sensor/led", "true");
+					publishToTopic("greenhouse/sensor/ledpower", "9");
 					Log.i("test", "LED TRU");
 				} catch (MqttException e) {
 					// TODO Auto-generated catch block
@@ -768,7 +803,7 @@ public class PushService extends Service
 			else if(LED == false)
 			{
 				try {
-					publishToTopic("greenhouse/sensor/led", "false");
+					publishToTopic("greenhouse/sensor/ledpower", "0");
 					Log.i("test", "LED TRUE");
 				} catch (MqttException e) {
 					// TODO Auto-generated catch block
@@ -776,6 +811,45 @@ public class PushService extends Service
 				}
 			}			
 		}
+		
+		public void setLEDPower(int power)
+		{
+			Log.i("test", "MQTT setLEDPower");
+			if(LED == true)
+			{
+				try {
+					publishToTopic("greenhouse/sensor/ledpower", String.valueOf(power));
+					Log.i("test", "String.valueOf(power)");
+				} catch (MqttException e) {
+					Log.i("test", "LEDPower2");				}
+			}	
+		}
+		
+		
+		public void setAirFan()
+		{
+			Log.i("test", "MQTT setAirFan");
+			if(AIRFAN == true)
+			{
+				try {
+					publishToTopic("greenhouse/sensor/fan", "true");
+					Log.i("test", "AirFan TRUE");
+				} catch (MqttException e) {
+					// TODO Auto-generated catch block
+					Log.i("test", "AirFan TRUE");				}
+			}
+			else if(AIRFAN == false)
+			{
+				try {
+					publishToTopic("greenhouse/sensor/fan", "false");
+					Log.i("test", "AirFan TRUE");
+				} catch (MqttException e) {
+					// TODO Auto-generated catch block
+					Log.i("test", "AirFan FALSE");
+				}
+			}			
+		}
+		
 		
 		public void requestHumidityGraphData()
 		{

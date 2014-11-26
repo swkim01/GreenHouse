@@ -64,6 +64,7 @@ public class CameraPreview extends SurfaceView implements AndSketch.IAndSketchEv
 	{
 		public void onPreviewFrame(byte[] i_frame);
 	}
+	
 	private Camera _camera_ref;
 	private SurfaceHolder _holder;
 	private boolean _is_enabled=false;
@@ -81,22 +82,28 @@ public class CameraPreview extends SurfaceView implements AndSketch.IAndSketchEv
 			context._evlistener.add(this);
 			this._camera_ref=Camera.open();
 			if(this._is_enabled){
+				Log.i("ssss","카메라뷰 생성자 내부 if문시작");
 				this._camera_ref.setPreviewDisplay(this._holder);
+				Log.i("ssss","카메라뷰 생성자 내부 if문중간");
 				this._camera_ref.startPreview();
+				Log.i("ssss","카메라뷰 생성자 내부 if문끝");
 			}			
 			
 			this._holder = getHolder();
 			this._holder.addCallback(this);
 			this._holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+			Log.i("ssss","카메라뷰 생성");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			((AndSketch)this.getContext())._finish(e);
+			Log.i("ssss","카메라뷰 생성 실패");
 		}
 	}
 
 	public void start(int i_w,int i_h,int i_fps,IOnPreviewFrame i_callback) throws IOException
 	{
 		assert i_callback!=null;
+
 		//cameraのプレビューサイズを設定
 		Camera.Parameters cparam=this._camera_ref.getParameters();
 		cparam.setPreviewFormat(ImageFormat.NV21);
@@ -104,9 +111,10 @@ public class CameraPreview extends SurfaceView implements AndSketch.IAndSketchEv
 		cparam.setPreviewFrameRate(i_fps);
 		this._camera_ref.setParameters(cparam);
 		this._callback=i_callback;
-
+		
 		if(this.isEnabled()){
 			this._camera_ref.setPreviewDisplay(this._holder);
+			Log.i("ssss","카메라 프리뷰 내부 start메소드 내부 if문 setPreviewDisplay");
 		}
 		this._cap_buf=new byte[2][cparam.getPreviewSize().width*cparam.getPreviewSize().height*ImageFormat.getBitsPerPixel(ImageFormat.NV21)/8];
 		this._camera_ref.setPreviewCallbackWithBuffer(this);
@@ -114,12 +122,14 @@ public class CameraPreview extends SurfaceView implements AndSketch.IAndSketchEv
 		this._camera_ref.startPreview();
 		this._camera_ref.addCallbackBuffer(this._cap_buf[this._cap_index]);
 		this._is_enabled=true;
+		Log.i("ssss","카메라 프리뷰 내부 start메소드 끝");
 	}
 	public void stop() throws IOException
 	{
 		this._camera_ref.setPreviewDisplay(null);
 		this._camera_ref.stopPreview();		
 		this._is_enabled=false;
+		Log.i("ssss","카메라 프리뷰 내부 stop()");
 	}
 	/**
 	 * 現在のフレームを格納したバッファを返す。
@@ -127,6 +137,7 @@ public class CameraPreview extends SurfaceView implements AndSketch.IAndSketchEv
 	 */
 	public byte[] getCurrentBuffer()
 	{
+		Log.i("ssss","카메라프리뷰 내부 getCurrentBuffer");
 		return this._cap_buf[(this._cap_index+1)%2];
 	}
 	@Override
@@ -155,6 +166,7 @@ public class CameraPreview extends SurfaceView implements AndSketch.IAndSketchEv
 				ret=i;
 			}
 		}
+		Log.i("ssss","카메라 프리뷰 내부 getSupportedFpsTolerance");
 		return ret;
 	}
 	/**
@@ -180,6 +192,7 @@ public class CameraPreview extends SurfaceView implements AndSketch.IAndSketchEv
 				ret=size;
 			}
 		}
+		Log.i("ssss","카메라 프리뷰 내부 getRecommendPreviewSize");
 		return ret;
 	}
 	@Override
@@ -190,10 +203,13 @@ public class CameraPreview extends SurfaceView implements AndSketch.IAndSketchEv
 	}
 	@Override
 	public void surfaceCreated(SurfaceHolder holder)
-	{
+	{	
 		if(this._is_enabled){
 			try {
+				Log.i("ssss","surfaceCreated try내부 시작");
+				
 				this._camera_ref.setPreviewDisplay(this._holder);
+				Log.i("ssss","surfaceCreated try내부 끝");
 			} catch (IOException e) {
 				((AndSketch)this.getContext())._finish(e);
 			}
@@ -206,19 +222,23 @@ public class CameraPreview extends SurfaceView implements AndSketch.IAndSketchEv
 		try {
 			if(this._camera_ref!=null){
 				this._camera_ref.setPreviewDisplay(null);
+				Log.i("ssss","카메라 서피스뷰 파괴");
 			}
 		} catch (IOException e) {
 			((AndSketch)this.getContext())._finish(e);
+			Log.i("ssss","카메라 서피스뷰 파괴 실패예외처리");
 		}
 	}
 	public synchronized void onAcStop() throws Exception
 	{
 		if(this._camera_ref!=null){
+			Log.i("ssss","카메라 끔 onAcStop()");
 			this._camera_ref.stopPreview();		
 			this._camera_ref.setPreviewCallbackWithBuffer(null);
 			this._camera_ref.setPreviewDisplay(null);
 			this._camera_ref.release();
 			this._camera_ref=null;
+			//this._is_enabled=false;
 		}
 	}
 	@Override
@@ -229,6 +249,7 @@ public class CameraPreview extends SurfaceView implements AndSketch.IAndSketchEv
 	@Override
 	public void onAcResume()
 	{
+		Log.i("ssss","CameraPreview onAcResume()");
 	}
 	@Override
 	public void onAcPause()

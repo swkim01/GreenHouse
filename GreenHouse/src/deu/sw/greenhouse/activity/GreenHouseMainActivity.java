@@ -1,11 +1,8 @@
 package deu.sw.greenhouse.activity;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,8 +10,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import deu.sw.greenhouse.R;
-import deu.sw.greenhouse.graph.TimeValue;
-import deu.sw.greenhouse.mqtt.PushService;
 
 public class GreenHouseMainActivity extends Activity {
 
@@ -61,15 +56,12 @@ public class GreenHouseMainActivity extends Activity {
 	protected void setupDefaultActivity() {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		this.getWindow().setFormat(PixelFormat.TRANSLUCENT);
-		this.getWindow().addFlags(
-				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 	}
 
 	public void StartViewActivity() {
 		 Intent intent = new Intent(this, ARPreviewActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			//intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		startActivity(intent);
 	}
 

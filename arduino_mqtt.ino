@@ -4,11 +4,11 @@
 #include <PubSubClient.h>
 #include <WiFi.h>
 #include <WiFiClient.h>
-
-#define MQTT_SERVER "192.168.0.30" //server ip
-
-char ssid[] = "SE918";          //  your network SSID (name) 
-char pass[] = "sei918tt";   // your network password
+ 
+#define MQTT_SERVER "192.168.43.82" //server ip
+ 
+char ssid[] = "AndroidHotspot3589";          //  your network SSID (name) 
+char pass[] = "88888888";   // your network password
 int status = WL_IDLE_STATUS;
 boolean wifi_connected = false;
 const int illuSensorPin=A0;
@@ -17,14 +17,23 @@ int rDHT11pin=3;
 rDHT11 DHT11(rDHT11pin);
 Timer ts;
 const int led = 53;
-
-
+ 
+const int led_enpin=6;
+const int led_inpin=5;
+const int fan_enpin=8;
+const int fan_inpin=9;
+ 
+int soil_Pin = A1;    
+int soil_Value = 0;
+ 
+ 
+ 
 // Callback function header
 void callback(char* topic, byte* payload, unsigned int length);
-
+ 
 WiFiClient netClient;
 PubSubClient client(MQTT_SERVER, 1883, callback, netClient);
-
+ 
 // Callback function
 void callback(char* topic, byte* payload, unsigned int length) {
   char message_buff[length+1];
@@ -39,12 +48,44 @@ void callback(char* topic, byte* payload, unsigned int length) {
   message_buff[i] = '\0';
   
   Serial.print(F("payload:"));
-  String ledvalue = String(message_buff);
-  Serial.println(ledvalue);
-  if(ledvalue=="true")
-  digitalWrite(led, HIGH);  
-  else if(ledvalue=="false")
-  digitalWrite(led, LOW);  
+  String value = String(message_buff);
+  Serial.println(value);
+  if(value=="true"){
+   
+    analogWrite(fan_enpin,255);
+ 
+    digitalWrite(fan_inpin,HIGH);
+ }  
+  else if(value=="false"){
+   
+    analogWrite(fan_enpin,0);
+    digitalWrite(fan_inpin,HIGH); 
+  }
+   else if(value=="0"){
+      
+    analogWrite(led_enpin,0);
+    
+    digitalWrite(led_inpin,HIGH);
+  }
+   else if(value=="1"){
+    analogWrite(led_enpin,28);
+  
+    digitalWrite(led_inpin,HIGH);  
+  }
+   else if(value=="4"){
+    analogWrite(led_enpin,113);
+   
+    digitalWrite(led_inpin,HIGH);  
+  }
+   else if(value=="9"){
+    analogWrite(led_enpin,255);
+    digitalWrite(led_inpin,HIGH);  
+  }
+  
+  
+  
+  
+  
 }
 void ledset(boolean value){
   if(value==true){
@@ -59,18 +100,18 @@ void setup() {
   Serial.begin(115200);
    pinMode(led, OUTPUT);  
   ts.every(10000,publishtoRealtime);
-  ts.every(1000*60*60,publishtoDB);
+  ts.every(60000,publishtoDB);
 }
 void dotest(){
 Serial.println("test");
-
+ 
 }
 void loop() {
   ensure_connected();
   client.loop();
   ts.update();
 }
-
+ 
 void ensure_connected() { 
   if (!client.connected()) {   
     if (!wifi_connected) {
@@ -80,13 +121,20 @@ void ensure_connected() {
   } else {
   }
 }
-
+ 
 int getillu(){
   illuValue =analogRead(illuSensorPin);
   Serial.print("illu sensor Values : ");
   Serial.println(illuValue);
 return illuValue;
 }
+int getsoil(){
+  soil_Value =analogRead(soil_Pin);
+  Serial.print("soil sensor Values : ");
+  Serial.println(soil_Value);
+return soil_Value;
+}
+ 
 void publishtotopic(String topic,int val){
       int temp1 = val;
       String temp =String(temp1); // int to chararray
@@ -104,37 +152,37 @@ void publishtotopic(String topic,int val){
       client.publish(char_topic,char_val);
      
 }
-
+ 
 void mqtt_connect() {
     Serial.println(F("Connecting to MQTT Broker..."));
     if (client.connect("arduinoclient")) {
       Serial.println(F("Connected to MQTT"));
       //totalpublish();
       client.subscribe("greenhouse/sensor/led");
+      client.subscribe("greenhouse/sensor/fan");
+      client.subscribe("greenhouse/sensor/ledpower");
+      
      } else {
       Serial.println(F("Failed connecting to MQTT"));
     }
 }
-
+ 
 void publishtoRealtime(){
       publishtotopic("hoyong/sensor/illu",getillu());
       publishtotopic("hoyong/sensor/humi",dht11print(1));
       delay(2000);
       publishtotopic("hoyong/sensor/temp",dht11print(2));
+      publishtotopic("hoyong/sensor/soil",getsoil());
+      
 }
-
+ 
 void publishtoDB(){
-      publishtotopic("Greenhouse/db/sensor/R1/put/illu",getillu());
-      publishtotopic("Greenhouse/db/sensor/R1/put/humi",dht11print(1));
+      publishtotopic("greenhouse/db/sensor/R1/put/illu",getillu());
+      publishtotopic("greenhouse/db/sensor/R1/put/humi",dht11print(1));
       delay(2000);
-      publishtotopic("Greenhouse/db/sensor/R1/put/temp",dht11print(2));
+      publishtotopic("greenhouse/db/sensor/R1/put/temp",dht11print(2));
+      Serial.println(F("pubtoDB OK"));
 }
-
-
-
-
-
-
 void initWiFi() {
   Serial.println(F("Attempting to connect to WPA network..."));
   Serial.print(F("SSID:")); 
@@ -152,8 +200,8 @@ void initWiFi() {
     delay(1000);
   }
 }
-
-
+ 
+ 
 float dht11print(int number){
 int result = DHT11.update();
   // Comprobamos si la lectura ha sido exitosa
@@ -180,6 +228,6 @@ int result = DHT11.update();
     default: 
 		Serial.println("Unknown error"); 
 		break;
-
+ 
   }
 }

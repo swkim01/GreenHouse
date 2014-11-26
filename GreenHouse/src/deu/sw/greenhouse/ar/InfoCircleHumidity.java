@@ -1,11 +1,7 @@
 package deu.sw.greenhouse.ar;
 
-import java.util.ArrayList;
-
 import jp.androidgroup.nyartoolkit.utils.gl.AndGLView;
-import android.graphics.Color;
 import deu.sw.greenhouse.R;
-import deu.sw.greenhouse.graph.TimeValue;
 
 public class InfoCircleHumidity extends Circle{
 	

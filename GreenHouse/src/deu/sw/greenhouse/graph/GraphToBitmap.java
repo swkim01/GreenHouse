@@ -108,12 +108,55 @@ public class GraphToBitmap {
 		}
 //		/////////////////////////////////////////////////////////////////////////////	
 //		
-		for(int i=1; i<9; i++)
-		{
-			String timeText = String.valueOf(timeValue.get(3*i-1).getTime());
-			int textWidth = (int)Math.ceil(this.pMarkText.measureText(timeText));
-			canvas.drawText(timeText, 100+(600*i/8)-(textWidth/2)-_x, 340-_y, pMarkText);
-		}
+		//////////////////////////////////////////////////////////ddddddddddddd
+//		for(int i=1; i<9; i++)
+//		{
+//			String timeText = String.valueOf(timeValue.get(3*i-1).getTime());
+//			int textWidth = (int)Math.ceil(this.pMarkText.measureText(timeText));
+//			canvas.drawText(timeText, 100+(600*i/8)-(textWidth/2)-_x, 340-_y, pMarkText);
+//		}
+		//////////////////////////////////////////////////////////fffffffffffffff
+		
+		//String timeText = String.valueOf(timeValue.get(3*1-1).getTime());
+		//int timeText =8;
+		String timeText = "8";
+		int textWidth = (int)Math.ceil(this.pMarkText.measureText(timeText));
+		canvas.drawText(timeText, 100+(600*1/8)-(textWidth/2)-_x, 340-_y, pMarkText);
+		
+		timeText = "11";
+		textWidth = (int)Math.ceil(this.pMarkText.measureText(timeText));
+		canvas.drawText(timeText, 100+(600*2/8)-(textWidth/2)-_x, 340-_y, pMarkText);
+		
+		timeText = "14";
+		textWidth = (int)Math.ceil(this.pMarkText.measureText(timeText));
+		canvas.drawText(timeText, 100+(600*3/8)-(textWidth/2)-_x, 340-_y, pMarkText);
+		
+		timeText = "17";
+		textWidth = (int)Math.ceil(this.pMarkText.measureText(timeText));
+		canvas.drawText(timeText, 100+(600*4/8)-(textWidth/2)-_x, 340-_y, pMarkText);
+		
+		timeText = "20";
+		textWidth = (int)Math.ceil(this.pMarkText.measureText(timeText));
+		canvas.drawText(timeText, 100+(600*5/8)-(textWidth/2)-_x, 340-_y, pMarkText);
+		
+		timeText = "23";
+		textWidth = (int)Math.ceil(this.pMarkText.measureText(timeText));
+		canvas.drawText(timeText, 100+(600*6/8)-(textWidth/2)-_x, 340-_y, pMarkText);
+		
+		timeText = "2";
+		textWidth = (int)Math.ceil(this.pMarkText.measureText(timeText));
+		canvas.drawText(timeText, 100+(600*7/8)-(textWidth/2)-_x, 340-_y, pMarkText);
+		
+		timeText = "5";
+		textWidth = (int)Math.ceil(this.pMarkText.measureText(timeText));
+		canvas.drawText(timeText, 100+(600*8/8)-(textWidth/2)-_x, 340-_y, pMarkText);
+		
+		
+		
+		
+		
+		
+		
 			path.moveTo(100+((float)600*1/24)-_x, 310-_y-(timeValue.get(0).getValue()*((float)250/maxValue)));
 			canvas.drawCircle(100+((float)600*1/24)-_x, 310-_y-(timeValue.get(0).getValue()*((float)250/maxValue)), 4, pCircle);
 

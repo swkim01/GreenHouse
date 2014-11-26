@@ -28,19 +28,22 @@ public class AndSketch extends Activity
 	public AndSketch()
 	{
 	}
+	
 	//Activityのハンドラ
 	@Override
 	protected void onResume() {
 		super.onResume();
 		try {
 			for(IAndSketchEventListerner i : this._evlistener) {
+				Log.i("ssss","AndSketch리쥼");
 				i.onAcResume();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			Log.i("ssss","AndSketch리쥼실패");
 		}
-		
 	}
+	
 	protected void onPause() {
 		super.onPause();
 		try {
@@ -51,6 +54,7 @@ public class AndSketch extends Activity
 			e.printStackTrace();
 		}
 	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -59,32 +63,39 @@ public class AndSketch extends Activity
 		this.setupDefaultActivity();
 		this.setContentView(R.layout.main);
 	}
+	
 	@Override
 	protected void onStart()
 	{
 		super.onStart();
 		return;
 	}
+	
 	@Override
 	protected void onStop()
 	{
+		Log.i("ssss","AndSketch : onAcStop()-1");
 		super.onStop();
 		try {
 			for(IAndSketchEventListerner i : this._evlistener) {
 				i.onAcStop();
+				Log.i("ssss","AndSketch : onAcStop()-2");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}	
+	}
+	
 	protected void onDestory()
 	{
 		super.onDestroy();
 		try {
 			for(IAndSketchEventListerner i : this._evlistener) {
 				i.onAcDestroy();
+				Log.i("ssss","AndSketch : onAcDestroy()");
 			}
 		} catch (Exception e) {
+			Log.i("ssss","예외야 예외");
 			e.printStackTrace();
 		}
 	}

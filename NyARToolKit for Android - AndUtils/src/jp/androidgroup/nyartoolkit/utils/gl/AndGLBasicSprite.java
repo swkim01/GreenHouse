@@ -212,7 +212,7 @@ public class AndGLBasicSprite implements AndGLView.IGLViewEventListener
 	public void onGlMayBeStop() {
 		int[] textures = {this.index};
 		this._ref_gl.glDeleteTextures(1, textures, 0);
-		this._image = null;
+		//this._image = null;
 		this._image.recycle();
 		this._ref_gl=null;
 		
